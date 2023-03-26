@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const Checkout = () => {
-  const { _id, title, price } = useLoaderData();
+  const { _id, title, price, img } = useLoaderData();
   const { user } = useContext(AuthContext);
 
   const handlePlaceOrder = (event) => {
@@ -31,10 +31,11 @@ const Checkout = () => {
 
     // }
 
-    fetch("http://localhost:5000/orders", {
+    fetch("https://genius-car-server-ten-red.vercel.app/orders", {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        authorization: `Bearer ${localStorage.getItem("genius-token")}`,
       },
       body: JSON.stringify(order),
     })
@@ -52,8 +53,15 @@ const Checkout = () => {
   return (
     <div>
       <form onSubmit={handlePlaceOrder}>
-        <h2 className="text-4xl">You are about to order: {title}</h2>
-        <h4 className="text-3xl">Price: {price}</h4>
+        <h2 className="text-4xl text-center">
+          You are about to order: <span className="text-blue-700">{title}</span>
+        </h2>
+        <h4 className="text-3xl text-center">Price: {price}</h4>
+        <img
+          src={img}
+          className="w-1/2 mb-5 mt-5 m-auto bordered items-center justify-center"
+          alt=""
+        />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <input
             name="firstName"
@@ -83,6 +91,7 @@ const Checkout = () => {
             readOnly
           />
         </div>
+        <br />
         <textarea
           name="message"
           className="textarea textarea-bordered h-24 w-full"
@@ -90,7 +99,11 @@ const Checkout = () => {
           required
         ></textarea>
 
-        <input className="btn" type="submit" value="Place Your Order" />
+        <input
+          className="btn text-center"
+          type="submit"
+          value="Place Your Order"
+        />
         {/* <button type="submit">Submit</button> */}
       </form>
     </div>
